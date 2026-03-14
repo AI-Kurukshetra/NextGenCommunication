@@ -29,6 +29,8 @@ const callEndedSchema = z.object({
   durationSeconds: z.number().nonnegative()
 });
 
+export const dynamic = "force-dynamic";
+
 export async function POST(request: Request, _: { params: { provider: string } }) {
   return withApiErrorHandling(async () => {
     const bodyRaw = await request.json();

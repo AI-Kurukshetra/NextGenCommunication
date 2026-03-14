@@ -2,6 +2,8 @@ import { withApiErrorHandling } from "@/lib/route";
 import { authenticateApiRequest } from "@/server/services/api-auth-service";
 import { MessagesService } from "@/server/services/messages-service";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(request: Request, context: { params: { id: string } }) {
   return withApiErrorHandling(async () => {
     const principal = await authenticateApiRequest(request, "messages:read");

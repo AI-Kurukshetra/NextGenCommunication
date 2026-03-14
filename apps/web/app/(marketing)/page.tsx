@@ -18,6 +18,8 @@ import {
 } from "@/content/marketing";
 
 export default function MarketingHomePage() {
+  const marqueeLogos = [...logoCloud, ...logoCloud];
+
   return (
     <div>
       <section className="relative overflow-hidden border-b border-black/5 bg-[radial-gradient(circle_at_0%_0%,rgba(16,185,129,0.18),transparent_44%),radial-gradient(circle_at_100%_10%,rgba(15,23,42,0.12),transparent_52%)]">
@@ -68,12 +70,29 @@ export default function MarketingHomePage() {
       <section className="border-b border-black/5 bg-white">
         <div className="mx-auto max-w-7xl px-6 py-10 lg:px-8">
           <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">Trusted by operating teams at</p>
-          <div className="mt-5 grid gap-3 sm:grid-cols-3 lg:grid-cols-6">
-            {logoCloud.map((logo) => (
-              <div key={logo} className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700">
-                {logo}
-              </div>
-            ))}
+          <div className="relative mt-5 overflow-hidden rounded-3xl border border-slate-200 bg-slate-50/60 p-3">
+            <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-white via-white/80 to-transparent" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-white via-white/80 to-transparent" />
+            <div className="logo-marquee-track">
+              {marqueeLogos.map((logo, index) => (
+                <div
+                  key={`${logo.name}-${index}`}
+                  className="logo-float flex min-w-[240px] items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm"
+                  style={{ animationDelay: `${(index % logoCloud.length) * 0.25}s` }}
+                >
+                  <span
+                    className="grid h-10 w-10 place-items-center rounded-xl text-sm font-bold text-white"
+                    style={{ backgroundColor: logo.accent }}
+                  >
+                    {logo.monogram}
+                  </span>
+                  <div>
+                    <p className="text-sm font-semibold text-slate-800">{logo.name}</p>
+                    <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500">Customer</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>

@@ -1,8 +1,10 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import Link from "next/link";
+import { FormEvent, Suspense, useMemo, useState } from "react";
 import type { Route } from "next";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Home, KeyRound, Mail, Sparkles } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
@@ -35,15 +37,14 @@ function mapErrorMessage(errorParam: string | null) {
   return "Authentication failed. Please try again.";
 }
 
-export default function LoginPage() {
+function LoginPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const nextPath = useMemo(() => safeNextPath(searchParams.get("next")), [searchParams]);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [ssoDomain, setSsoDomain] = useState("");
-  const [busyAction, setBusyAction] = useState<"email" | "magic" | "sso" | null>(null);
+  const [busyAction, setBusyAction] = useState<"email" | "signup" | "magic" | null>(null);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(
     mapErrorMessage(searchParams.get("error"))
@@ -90,8 +91,51 @@ export default function LoginPage() {
         return;
       }
 
-      router.push(nextPath);
+      router.replace(nextPath);
       router.refresh();
+    } finally {
+      setBusyAction(null);
+    }
+  }
+
+  async function handleSignUp() {
+    resetMessages();
+
+    if (!supabase) {
+      setErrorMessage("Supabase client is not configured. Add public Supabase env vars.");
+      return;
+    }
+
+    if (!email.trim() || !password.trim()) {
+      setErrorMessage("Enter both email and password to create an account.");
+      return;
+    }
+
+    setBusyAction("signup");
+
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email: email.trim(),
+        password,
+        options: {
+          emailRedirectTo: buildRedirectTo()
+        }
+      });
+
+      if (error) {
+        setErrorMessage(error.message);
+        return;
+      }
+
+      if (data.session) {
+        router.replace(nextPath);
+        router.refresh();
+        return;
+      }
+
+      setStatusMessage(
+        "Account created. Check your inbox and verify your email before signing in."
+      );
     } finally {
       setBusyAction(null);
     }
@@ -131,126 +175,139 @@ export default function LoginPage() {
     }
   }
 
-  async function handleSso() {
-    resetMessages();
-
-    if (!supabase) {
-      setErrorMessage("Supabase client is not configured. Add public Supabase env vars.");
-      return;
-    }
-
-    setBusyAction("sso");
-
-    try {
-      const redirectTo = buildRedirectTo();
-
-      if (ssoDomain.trim()) {
-        const { error } = await supabase.auth.signInWithSSO({
-          domain: ssoDomain.trim(),
-          options: {
-            redirectTo
-          }
-        });
-
-        if (error) {
-          setErrorMessage(error.message);
-        }
-
-        return;
-      }
-
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo,
-          queryParams: {
-            prompt: "select_account"
-          }
-        }
-      });
-
-      if (error) {
-        setErrorMessage(error.message);
-      }
-    } finally {
-      setBusyAction(null);
-    }
-  }
-
   return (
-    <div className="min-h-screen flex items-center justify-center p-6">
-      <Card className="w-full max-w-md">
-        <CardTitle>Sign In</CardTitle>
-        <CardDescription className="mt-2">
-          Authenticate with Supabase Auth (email/password, SSO, or magic link).
-        </CardDescription>
+    <div className="relative min-h-screen overflow-hidden bg-[#f3efe6] px-4 py-8 md:px-8">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -left-20 top-10 h-64 w-64 rounded-full bg-cyan-300/25 blur-3xl" />
+        <div className="absolute right-0 top-1/3 h-72 w-72 rounded-full bg-orange-300/25 blur-3xl" />
+        <div className="absolute bottom-0 left-1/3 h-64 w-64 rounded-full bg-slate-300/30 blur-3xl" />
+      </div>
 
-        <form className="mt-5 space-y-3" onSubmit={handleEmailSignIn}>
-          <Input
-            type="email"
-            placeholder="you@company.com"
-            autoComplete="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            required
-          />
-          <Input
-            type="password"
-            placeholder="Password"
-            autoComplete="current-password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            required
-          />
-          <Button type="submit" className="w-full" disabled={busyAction !== null || !supabaseConfigured}>
-            {busyAction === "email" ? "Signing In..." : "Continue with Email"}
-          </Button>
-        </form>
+      <div className="relative mx-auto grid w-full max-w-6xl gap-6 lg:grid-cols-[1.1fr_1fr]">
+        <section className="hidden rounded-3xl border border-slate-200/70 bg-white/60 p-8 shadow-[0_30px_90px_rgba(15,23,42,0.08)] backdrop-blur lg:block">
+          <p className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+            <Sparkles className="h-3.5 w-3.5 text-cyan-700" />
+            Access Console
+          </p>
+          <h1 className="mt-5 text-4xl font-semibold leading-tight text-slate-950">
+            Secure access to your communications command center.
+          </h1>
+          <p className="mt-4 max-w-lg text-sm leading-7 text-slate-600">
+            Manage messaging, voice, templates, campaign orchestration, and usage analytics through Supabase-authenticated workspace access.
+          </p>
 
-        <div className="mt-3">
-          <Button
-            variant="secondary"
-            className="w-full"
-            onClick={handleMagicLink}
-            disabled={busyAction !== null || !supabaseConfigured}
-          >
-            {busyAction === "magic" ? "Sending Link..." : "Send Magic Link"}
-          </Button>
-        </div>
+          <div className="mt-8 grid gap-4">
+            <div className="rounded-2xl border border-slate-200 bg-white p-4">
+              <p className="text-sm font-semibold text-slate-900">Real-time Operations</p>
+              <p className="mt-2 text-sm text-slate-600">Delivery tracking, webhook visibility, and fraud-aware routing signals in one place.</p>
+            </div>
+            <div className="rounded-2xl border border-slate-200 bg-white p-4">
+              <p className="text-sm font-semibold text-slate-900">Role-aware Workspaces</p>
+              <p className="mt-2 text-sm text-slate-600">Each user lands in org-specific demo data with scoped records and dashboards.</p>
+            </div>
+          </div>
+        </section>
 
-        <div className="mt-5 space-y-3 border-t pt-4">
-          <Input
-            type="text"
-            placeholder="company.com (optional for enterprise SSO)"
-            value={ssoDomain}
-            onChange={(event) => setSsoDomain(event.target.value)}
-            disabled={!supabaseConfigured}
-          />
-          <Button
-            variant="secondary"
-            className="w-full"
-            onClick={handleSso}
-            disabled={busyAction !== null || !supabaseConfigured}
-          >
-            {busyAction === "sso" ? "Redirecting..." : "Continue with SSO"}
-          </Button>
-        </div>
+        <Card className="rounded-3xl border-slate-200/80 bg-white/90 p-6 shadow-[0_30px_90px_rgba(15,23,42,0.12)] backdrop-blur md:p-8">
+          <div className="mb-6 flex items-center justify-end gap-3">
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900"
+            >
+              <Home className="h-3.5 w-3.5" />
+              Main Site
+            </Link>
+          </div>
 
-        {statusMessage ? <p className="mt-4 text-xs text-green-700">{statusMessage}</p> : null}
-        {errorMessage ? <p className="mt-4 text-xs text-red-700">{errorMessage}</p> : null}
+          <CardTitle className="text-2xl text-slate-950">Sign In</CardTitle>
+          <CardDescription className="mt-2">
+            Authenticate with Supabase Auth (email/password or magic link).
+          </CardDescription>
 
-        <p className="mt-4 text-xs text-muted-foreground">
-          Configure providers in Supabase Auth settings.
-          <a
-            href="https://supabase.com/docs/guides/auth"
-            target="_blank"
-            rel="noreferrer"
-            className="ml-1 underline"
-          >
-            Learn more
-          </a>
-        </p>
-      </Card>
+          <form className="mt-6 space-y-3" onSubmit={handleEmailSignIn}>
+            <div>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Email</p>
+              <Input
+                type="email"
+                placeholder="you@company.com"
+                autoComplete="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Password</p>
+              <Input
+                type="password"
+                placeholder="Password"
+                autoComplete="current-password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                required
+              />
+            </div>
+            <div className="grid gap-2 sm:grid-cols-2">
+              <Button type="submit" className="w-full gap-2" disabled={busyAction !== null || !supabaseConfigured}>
+                <Mail className="h-4 w-4" />
+                {busyAction === "email" ? "Signing In..." : "Continue with Email"}
+              </Button>
+              <Button
+                type="button"
+                variant="secondary"
+                className="w-full gap-2"
+                onClick={handleSignUp}
+                disabled={busyAction !== null || !supabaseConfigured}
+              >
+                <KeyRound className="h-4 w-4" />
+                {busyAction === "signup" ? "Creating..." : "Create Account"}
+              </Button>
+            </div>
+          </form>
+
+          <div className="mt-4 grid gap-3 rounded-2xl border border-slate-200 bg-slate-50/70 p-4">
+            <Button
+              variant="secondary"
+              className="w-full"
+              onClick={handleMagicLink}
+              disabled={busyAction !== null || !supabaseConfigured}
+            >
+              {busyAction === "magic" ? "Sending Link..." : "Send Magic Link"}
+            </Button>
+          </div>
+
+          {statusMessage ? (
+            <div className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs text-emerald-800">
+              {statusMessage}
+            </div>
+          ) : null}
+          {errorMessage ? (
+            <div className="mt-4 rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-xs text-rose-800">
+              {errorMessage}
+            </div>
+          ) : null}
+
+          <p className="mt-5 text-xs text-slate-500">
+            Configure providers in Supabase Auth settings.
+            <a
+              href="https://supabase.com/docs/guides/auth"
+              target="_blank"
+              rel="noreferrer"
+              className="ml-1 font-semibold underline"
+            >
+              Learn more
+            </a>
+          </p>
+        </Card>
+      </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#f3efe6]" />}>
+      <LoginPageContent />
+    </Suspense>
   );
 }

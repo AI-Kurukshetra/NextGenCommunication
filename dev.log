@@ -341,3 +341,11 @@ digest: "3440288323"
  GET /_next/static/chunks/app-pages-internals.js 404 in 36ms
  GET /_next/static/chunks/main-app.js?v=1773471153846 404 in 38ms
  GET /_next/static/chunks/app/(dashboard)/dashboard/page.js 404 in 34ms
+ ✓ Compiled in 2.8s (1716 modules)
+ ✓ Compiled in 468ms (855 modules)
+ ✓ Compiled in 322ms (855 modules)
+ ✓ Compiled in 314ms (855 modules)
+ ✓ Compiled in 315ms (855 modules)
+ ✓ Compiled in 508ms (855 modules)
+ ✓ Compiled in 1185ms (1719 modules)
+ ✓ Compiled in 872ms (1719 modules)

@@ -122,13 +122,13 @@ export const marketingNav: MarketingNavItem[] = [
 ];
 
 export const logoCloud = [
-  "Northstar Health",
-  "Axiom Travel",
-  "Lattice Bank",
-  "Helio Insurance",
-  "Summit Retail",
-  "Pulse Transit"
-];
+  { name: "Northstar Health", monogram: "NH", accent: "#0f766e" },
+  { name: "Axiom Travel", monogram: "AT", accent: "#0f172a" },
+  { name: "Lattice Bank", monogram: "LB", accent: "#1d4ed8" },
+  { name: "Helio Insurance", monogram: "HI", accent: "#b45309" },
+  { name: "Summit Retail", monogram: "SR", accent: "#334155" },
+  { name: "Pulse Transit", monogram: "PT", accent: "#0f766e" }
+] as const;
 
 export const heroMetrics = [
   { value: "99.99%", label: "platform availability target" },

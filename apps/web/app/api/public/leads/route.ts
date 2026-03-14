@@ -12,6 +12,8 @@ const leadSchema = z.object({
   message: z.string().optional()
 });
 
+export const dynamic = "force-dynamic";
+
 export async function POST(request: Request) {
   return withApiErrorHandling(async () => {
     const payload = leadSchema.parse(await request.json());

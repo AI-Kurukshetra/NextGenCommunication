@@ -7,6 +7,8 @@ const schema = z.object({
   email: z.string().email()
 });
 
+export const dynamic = "force-dynamic";
+
 export async function POST(request: Request) {
   return withApiErrorHandling(async () => {
     const payload = schema.parse(await request.json());

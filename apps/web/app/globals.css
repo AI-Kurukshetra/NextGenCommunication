@@ -27,3 +27,34 @@ body {
     radial-gradient(circle at 100% 100%, rgba(242, 170, 76, 0.16), transparent 42%);
   font-family: var(--font-space-grotesk), "Space Grotesk", "Sora", "Avenir Next", system-ui, sans-serif;
 }
+
+@keyframes logo-marquee-right-to-left {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes logo-float-y {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.logo-marquee-track {
+  display: flex;
+  width: max-content;
+  gap: 0.75rem;
+  animation: logo-marquee-right-to-left 22s linear infinite;
+}
+
+.logo-float {
+  animation: logo-float-y 3.2s ease-in-out infinite;
+  filter: drop-shadow(0 8px 16px rgba(15, 23, 42, 0.15));
+}

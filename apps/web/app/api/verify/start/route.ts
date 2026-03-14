@@ -9,6 +9,8 @@ const schema = z.object({
   ttlSeconds: z.number().min(60).max(900).optional()
 });
 
+export const dynamic = "force-dynamic";
+
 export async function POST(request: Request) {
   return withApiErrorHandling(async () => {
     const principal = await authenticateApiRequest(request, "verify:write");

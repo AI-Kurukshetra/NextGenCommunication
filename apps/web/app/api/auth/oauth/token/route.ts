@@ -11,6 +11,8 @@ const schema = z.object({
   scope: z.string().optional()
 });
 
+export const dynamic = "force-dynamic";
+
 export async function POST(request: Request) {
   return withApiErrorHandling(async () => {
     const body = await parseJson(request, schema);

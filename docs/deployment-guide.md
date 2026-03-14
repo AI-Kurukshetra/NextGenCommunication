@@ -24,6 +24,7 @@ Set in Vercel and local `.env`:
 3. Seed data:
    ```bash
    supabase db reset
+   pnpm supabase:seed
    ```
 4. Deploy Edge Functions:
    ```bash
@@ -55,6 +56,7 @@ Set in Vercel and local `.env`:
 - New schema changes: add numbered SQL file in `supabase/migrations`.
 - Backfill scripts: add idempotent SQL migrations.
 - Seed: only dev fixtures in `supabase/seed.sql`.
+- Extended local fixture setup: `apps/web/scripts/seed-supabase.js`.
 
 ## Webhook Reliability
 

@@ -8,6 +8,8 @@ const schema = z.object({
   code: z.string().min(4).max(10)
 });
 
+export const dynamic = "force-dynamic";
+
 export async function POST(request: Request) {
   return withApiErrorHandling(async () => {
     const principal = await authenticateApiRequest(request, "verify:write");

@@ -42,15 +42,19 @@ export function SiteHeader() {
             <p className="text-lg font-semibold text-slate-950">Cloud Communications</p>
           </div>
         </Link>
-        <nav className="hidden items-center gap-1 xl:flex" onMouseLeave={() => setOpenMenu(null)}>
+        <nav className="hidden items-center gap-1 xl:flex">
           {marketingNav.map((item) => {
             const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
 
             return (
-              <div key={item.label} className="relative">
+              <div
+                key={item.label}
+                className="relative -mb-4 pb-4"
+                onMouseEnter={() => setOpenMenu(item.label)}
+                onMouseLeave={() => setOpenMenu(null)}
+              >
                 <button
                   type="button"
-                  onMouseEnter={() => setOpenMenu(item.label)}
                   onFocus={() => setOpenMenu(item.label)}
                   className={cn(
                     "rounded-full px-4 py-2 text-sm font-medium transition-colors",
@@ -60,27 +64,29 @@ export function SiteHeader() {
                   {item.label}
                 </button>
                 {openMenu === item.label ? (
-                  <div className="absolute left-1/2 top-full mt-4 w-[700px] -translate-x-1/2 rounded-[28px] border border-slate-200 bg-white p-6 shadow-[0_22px_80px_rgba(15,23,42,0.14)]">
-                    <div className="grid grid-cols-2 gap-6">
-                      {item.sections.map((section) => (
-                        <div key={section.title} className="space-y-3">
-                          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#0f766e]">
-                            {section.title}
-                          </p>
-                          <div className="space-y-2">
-                            {section.links.map((link) => (
-                              <Link
-                                key={link.label}
-                                href={link.href}
-                                className="block rounded-2xl border border-transparent px-4 py-3 transition-colors hover:border-slate-200 hover:bg-slate-50"
-                              >
-                                <p className="text-sm font-semibold text-slate-950">{link.label}</p>
-                                <p className="mt-1 text-sm leading-6 text-slate-600">{link.description}</p>
-                              </Link>
-                            ))}
+                  <div className="absolute left-1/2 top-full w-[700px] -translate-x-1/2 pt-3">
+                    <div className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-[0_22px_80px_rgba(15,23,42,0.14)]">
+                      <div className="grid grid-cols-2 gap-6">
+                        {item.sections.map((section) => (
+                          <div key={section.title} className="space-y-3">
+                            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#0f766e]">
+                              {section.title}
+                            </p>
+                            <div className="space-y-2">
+                              {section.links.map((link) => (
+                                <Link
+                                  key={link.label}
+                                  href={link.href}
+                                  className="block rounded-2xl border border-transparent px-4 py-3 transition-colors hover:border-slate-200 hover:bg-slate-50"
+                                >
+                                  <p className="text-sm font-semibold text-slate-950">{link.label}</p>
+                                  <p className="mt-1 text-sm leading-6 text-slate-600">{link.description}</p>
+                                </Link>
+                              ))}
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
                   </div>
                 ) : null}

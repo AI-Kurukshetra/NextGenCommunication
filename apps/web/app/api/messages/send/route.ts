@@ -11,6 +11,8 @@ const schema = z.object({
   metadata: z.record(z.any()).optional()
 });
 
+export const dynamic = "force-dynamic";
+
 export async function POST(request: Request) {
   return withApiErrorHandling(async () => {
     const principal = await authenticateApiRequest(request, "messages:write");

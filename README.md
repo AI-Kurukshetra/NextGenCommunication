@@ -24,6 +24,7 @@ Production-ready CPaaS foundation (Twilio/Bandwidth-style) built on Next.js 14 +
    ```bash
    supabase start
    supabase db reset
+   pnpm supabase:seed
    ```
 4. Run web app:
    ```bash
@@ -34,6 +35,18 @@ Production-ready CPaaS foundation (Twilio/Bandwidth-style) built on Next.js 14 +
    pnpm --filter @nextgen/cpaas-sdk build
    ```
 
+### Local Auth Seed
+
+`pnpm supabase:seed` creates a default user and core org/app fixtures.
+Each demo user receives a separate `demo-*` organization with distinct dashboard data.
+
+Demo logins:
+
+- `owner@nextgen.dev` / `Nextgen123!`
+- `ops@nextgen.dev` / `Nextgen123!`
+- `analyst@nextgen.dev` / `Nextgen123!`
+- `support@nextgen.dev` / `Nextgen123!`
+
 ## Architecture Docs
 
 - [System Architecture](./docs/system-architecture.md)
@@ -42,6 +55,7 @@ Production-ready CPaaS foundation (Twilio/Bandwidth-style) built on Next.js 14 +
 - [OpenAPI](./docs/openapi.yaml)
 - [Folder Structure](./docs/folder-structure.md)
 - [Key Code Files](./docs/key-code-files.md)
+- [Feature Coverage Matrix](./docs/feature-coverage-matrix.md)
 - [Deployment Guide](./docs/deployment-guide.md)
 
 ## Core Modules Implemented

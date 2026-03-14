@@ -1,10 +1,12 @@
 import { ApiKeysRepository, type ApiPrincipal } from "@/server/repositories/api-keys-repository";
 import { OAuthTokensRepository } from "@/server/repositories/oauth-tokens-repository";
+import { QuotaService } from "@/server/services/quota-service";
 import { AppError } from "@/lib/errors";
 import { checkRateLimit } from "@/lib/rate-limit";
 
 const apiKeysRepository = new ApiKeysRepository();
 const oauthTokensRepository = new OAuthTokensRepository();
+const quotaService = new QuotaService();
 
 export interface RequestPrincipal {
   organizationId: string;
@@ -68,6 +70,7 @@ export async function authenticateApiRequest(request: Request, requiredScope?: s
     principal.rateLimitPerMinute,
     60_000
   );
+  await quotaService.enforceApiRequestQuota(principal);
 
   if (requiredScope && !principal.scopes.includes(requiredScope) && !principal.scopes.includes("*")) {
     throw new AppError("Insufficient scope", { status: 403, code: "forbidden" });

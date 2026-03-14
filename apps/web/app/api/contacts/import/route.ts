@@ -7,6 +7,8 @@ const schema = z.object({
   csv: z.string().min(5)
 });
 
+export const dynamic = "force-dynamic";
+
 export async function POST(request: Request) {
   return withApiErrorHandling(async () => {
     const principal = await authenticateApiRequest(request, "contacts:write");

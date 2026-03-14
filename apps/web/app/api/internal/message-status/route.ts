@@ -18,6 +18,8 @@ function assertInternalToken(request: Request) {
   }
 }
 
+export const dynamic = "force-dynamic";
+
 export async function POST(request: Request) {
   return withApiErrorHandling(async () => {
     assertInternalToken(request);

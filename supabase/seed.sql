@@ -1,18 +1,7 @@
--- Seed data for local development
-insert into users (id, email, full_name)
-values
-  ('11111111-1111-1111-1111-111111111111', 'owner@nextgen.dev', 'Owner User')
-on conflict (id) do nothing;
-
 insert into organizations (id, name, slug, created_by)
 values
-  ('22222222-2222-2222-2222-222222222222', 'NextGen Communications', 'nextgen-comms', '11111111-1111-1111-1111-111111111111')
+  ('22222222-2222-2222-2222-222222222222', 'NextGen Communications', 'nextgen-comms', null)
 on conflict (id) do nothing;
-
-insert into organization_members (organization_id, user_id, role)
-values
-  ('22222222-2222-2222-2222-222222222222', '11111111-1111-1111-1111-111111111111', 'owner')
-on conflict (organization_id, user_id) do nothing;
 
 insert into applications (id, organization_id, name, slug, default_from_number)
 values

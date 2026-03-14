@@ -10,6 +10,8 @@ const schema = z.object({
   variables: z.array(z.string()).optional()
 });
 
+export const dynamic = "force-dynamic";
+
 export async function POST(request: Request) {
   return withApiErrorHandling(async () => {
     const principal = await authenticateApiRequest(request, "templates:write");

@@ -10,6 +10,8 @@ const schema = z.object({
   capabilities: z.array(z.string()).default(["sms", "voice"])
 });
 
+export const dynamic = "force-dynamic";
+
 export async function POST(request: Request) {
   return withApiErrorHandling(async () => {
     const principal = await authenticateApiRequest(request, "numbers:write");

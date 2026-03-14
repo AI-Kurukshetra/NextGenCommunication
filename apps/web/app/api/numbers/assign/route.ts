@@ -8,6 +8,8 @@ const schema = z.object({
   applicationId: z.string().uuid()
 });
 
+export const dynamic = "force-dynamic";
+
 export async function POST(request: Request) {
   return withApiErrorHandling(async () => {
     const principal = await authenticateApiRequest(request, "numbers:write");

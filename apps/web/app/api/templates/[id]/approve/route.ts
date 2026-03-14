@@ -9,6 +9,8 @@ const schema = z.object({
   approvedBy: z.string().uuid().optional()
 });
 
+export const dynamic = "force-dynamic";
+
 export async function POST(request: Request, context: { params: { id: string } }) {
   return withApiErrorHandling(async () => {
     const principal = await authenticateApiRequest(request, "templates:approve");

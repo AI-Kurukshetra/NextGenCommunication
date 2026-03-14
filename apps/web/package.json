@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "supabase:seed": "node scripts/seed-supabase.js"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.1.1",

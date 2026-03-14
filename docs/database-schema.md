@@ -54,4 +54,4 @@ Migration file: `supabase/migrations/202603140001_init_cpaas.sql`
 
 ## Seed Data
 
-`supabase/seed.sql` includes a local org/app/API key/oauth client and sample webhook.
+`supabase/seed.sql` includes base fixtures, and `pnpm supabase:seed` provisions demo auth users plus realistic sample records for messages, campaigns, calls, usage, and dashboard-ready data.
