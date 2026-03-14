@@ -1,2 +1,0 @@
- ⚠ Port 3000 is in use, trying 3001 instead.
-<w> [webpack.cache.PackFileCacheStrategy] Restoring pack from C:\NextGenCommunication\apps\web\.next\cache\webpack\client-development.pack.gz failed: TypeError: Cannot read properties of undefined (reading 'hasStartTime')
