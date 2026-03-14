@@ -1,0 +1,24 @@
+{
+  "name": "nextgen-cpaas",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@9.15.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "pnpm --filter web dev",
+    "build": "pnpm --filter web build && pnpm --filter @nextgen/cpaas-sdk build",
+    "lint": "pnpm --filter web lint",
+    "typecheck": "pnpm --filter web typecheck && pnpm --filter @nextgen/cpaas-sdk typecheck",
+    "test": "pnpm --filter web test",
+    "supabase:start": "supabase start",
+    "supabase:reset": "supabase db reset",
+    "supabase:push": "supabase db push",
+    "supabase:functions:deploy": "supabase functions deploy queue-worker && supabase functions deploy webhook-dispatch"
+  },
+  "devDependencies": {
+    "supabase": "^2.78.1"
+  }
+}

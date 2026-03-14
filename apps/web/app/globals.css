@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 42 30% 96%;
+  --foreground: 216 30% 12%;
+  --card: 0 0% 100%;
+  --card-foreground: 216 30% 12%;
+  --primary: 206 76% 42%;
+  --primary-foreground: 210 40% 98%;
+  --border: 210 16% 85%;
+  --muted: 34 26% 92%;
+  --muted-foreground: 215 16% 40%;
+  --success: 146 50% 36%;
+  --danger: 0 70% 45%;
+  --warning: 36 88% 46%;
+}
+
+* {
+  @apply border-border;
+}
+
+body {
+  @apply bg-background text-foreground antialiased;
+  background-image: radial-gradient(circle at 10% 0%, rgba(39, 116, 192, 0.12), transparent 35%),
+    radial-gradient(circle at 100% 100%, rgba(242, 170, 76, 0.16), transparent 42%);
+  font-family: var(--font-space-grotesk), "Space Grotesk", "Sora", "Avenir Next", system-ui, sans-serif;
+}

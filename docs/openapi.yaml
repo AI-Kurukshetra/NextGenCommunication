@@ -1,0 +1,94 @@
+openapi: 3.1.0
+info:
+  title: NextGen CPaaS API
+  version: 0.1.0
+servers:
+  - url: https://api.example.com
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+security:
+  - ApiKeyAuth: []
+paths:
+  /api/messages/send:
+    post:
+      summary: Send SMS or MMS
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [to, from]
+              properties:
+                to: { type: string }
+                from: { type: string }
+                text: { type: string }
+                mediaUrls:
+                  type: array
+                  items: { type: string, format: uri }
+      responses:
+        "202":
+          description: Accepted
+  /api/messages/{id}:
+    get:
+      summary: Get message status
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: OK
+  /api/voice/call:
+    post:
+      summary: Create outbound call
+      responses:
+        "202":
+          description: Accepted
+  /api/numbers/purchase:
+    post:
+      summary: Purchase phone number
+      responses:
+        "201":
+          description: Created
+  /api/numbers/port:
+    post:
+      summary: Port existing number
+      responses:
+        "201":
+          description: Created
+  /api/numbers/assign:
+    post:
+      summary: Assign number to app
+      responses:
+        "200":
+          description: OK
+  /api/verify/start:
+    post:
+      summary: Start OTP flow
+      responses:
+        "201":
+          description: Created
+  /api/verify/check:
+    post:
+      summary: Check OTP code
+      responses:
+        "200":
+          description: OK
+  /api/usage/summary:
+    get:
+      summary: Usage summary
+      responses:
+        "200":
+          description: OK
+  /api/analytics/overview:
+    get:
+      summary: Analytics overview
+      responses:
+        "200":
+          description: OK
